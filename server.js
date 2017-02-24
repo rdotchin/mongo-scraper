@@ -2,13 +2,14 @@
 const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
-const cheerio = require('cheerio');
+
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+
 const PORT = 8080;
 
+
 // Serve static content for the app from the "public" directory in the application directory.
-app.use(express.static("public"));
+app.use(express.static("app/public"));
 /*===========================body-parser======================================*/
 // create application/x-www-form-urlencoded parser 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,14 +25,9 @@ app.use(bodyParser.text({ type: 'text/html' }));
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-/*===============================ROUTES======================================*/
-app.get('/', function(req, res){
-	res.render('index');
-});
+//require html routes
+require('./routing/html-routes.js')(app);
 
-app.get('/saved', function(req, res){
-	res.render('saved');
-});
 
 app.listen(PORT, function(){
 	console.log('listening on http://localhost:' + PORT);
