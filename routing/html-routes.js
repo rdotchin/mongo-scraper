@@ -1,18 +1,65 @@
 const cheerio = require('cheerio');
-const mongojs = require('mongojs');
+const mongoose = require("mongoose");
 const request = require('request');
+const Note = require("./../models/noteModel.js");
+const News = require("./../models/newsmodel.js");
+// Database configuration with mongoose
+mongoose.connect('mongodb://localhost/nytdb');
+const db = mongoose.connection;
 
+// Show any mongoose errors
+db.on("error", function(error){
+    console.log("Mongoose Error: ", error);
+});
 
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+    console.log("Mongoose connection successful.");
+});
 
 /*===============================ROUTES======================================*/
 module.exports= function(app){
 	app.get('/', function(req, res){
-		res.render('index');
+	    News.find({}, function(error, doc) {
+	        if(error){console.log(error);}
+	        else{
+	            //set up data to show in handlebars
+                const hbsObject = {news: doc};
+                res.render('index', hbsObject);
+            }
+        });
 	});
 
+	// Bring user to the saved html page showing all their saved articles
 	app.get('/saved', function(req, res){
-		res.render('saved');
+        News.find({}, function(error, doc) {
+            if(error){console.log(error);}
+            else{
+                //set up data to show in handlebars
+                const hbsObject = {news: doc};
+                res.render('saved', hbsObject);
+            }
+        });
 	});
+
+	app.get('/save/:id?', function(req, res){
+	    // Set the _id of the article the user would like to save to a variable
+	    var id = req.params.id;
+	    // Find the news article by id
+        News.findById(id, function(err, news){
+            if (err) return handleError(err);
+
+            news.saved = 1;
+            news.save(function(err, updatedNews){
+                if (err) return handleError(err);
+                res.redirect('/');
+            })
+
+        })
+
+	    // Select that article and update saved to true so it will show in the saved page
+
+    });
 
 	app.get('/scrape', function(req, res){
         //make a request to the NYT site to grab articles
@@ -29,9 +76,28 @@ module.exports= function(app){
                 // Save the text summary for the story
                 const summary = $(this).find("p").text();
 
-               console.log(headline);
+                console.log(headline);
                 console.log(link);
                 console.log(summary);
+
+                //create an object of every headline, link and summary
+                const result = {};
+
+                result.headline = headline;
+                result.link = link;
+                result.summary = summary;
+                //create a new entry that passes the result object to the entry
+                const entry = new News(result);
+
+                // Save entry to the db
+                entry.save(function(err, doc){
+                    // Console.log any errors
+                    if(err){console.log(err);}
+                    // Or log the doc
+                    else{console.log(doc);}
+
+                })
+
             })
 
         });

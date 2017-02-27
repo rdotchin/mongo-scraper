@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 // Create Schema class
 const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://localhost/nytdb');
-
 // Create a Schema for notes
 var NotesSchema = new Schema({
     // Title of the users note

@@ -7,9 +7,13 @@
 	</div>
 
 	<div class="panel panel-primary">
-  		<div class="panel-heading">Panel heading without title</div>
-  		<div class="panel-body">Panel content</div>
-	</div>
+        {{#each news}}
+            <div class="panel-heading"><a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a></div>
+  		    <div class="panel-body">{{this.summary}} <a href="/save/{{this._id}}"><button>Save</button></a></div>
+
+
+        {{/each}}
+
 
 
 </div>{{!-- /container div --}}

@@ -8,4 +8,12 @@
 .jumbotron{
 	height: 400px;
 	text-align: center;
-}	
+}
+
+.title {
+	color: white;
+}
+
+.title:hover{
+	color: red;
+}

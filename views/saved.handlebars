@@ -6,10 +6,20 @@
 	 	<p>Your Saved Articles</p>
 	</div>
 
-	<div class="panel panel-primary">
-  		<div class="panel-heading">Panel heading without title</div>
-  		<div class="panel-body">Panel content</div>
-	</div>
+    <div class="panel panel-primary">
+        {{#each news}}
+            <!--if the article is saved it will show below-->
+            {{#if saved}}
+            <div class="panel-heading"><a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a></div>
+            <div class="panel-body">{{this.summary}}</div>
+
+            {{/if}}
+
+        {{/each}}
+
+
+
+    </div>{{!-- /container div --}}
 
 
 </div>{{!-- /container div --}}

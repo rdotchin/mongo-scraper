@@ -2,28 +2,18 @@
 const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
+const logger = require("morgan");
 const mongoose = require("mongoose");
 // Requiring the Note and News models
-const Note = require("./models/noteModel.js");
-const News = require("./models/newsmodel.js");
-
-
 const bodyParser = require('body-parser');
-
 const PORT = 8080;
 
+// Morgan and body-parser
+app.use(logger("dev"));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static("app/public"));
-/*===========================body-parser======================================*/
-// create application/x-www-form-urlencoded parser 
-app.use(bodyParser.urlencoded({ extended: false }));
-// parse various different custom JSON types as JSON 
-app.use(bodyParser.json({ type: 'application/*+json' }));
-// parse some custom thing into a Buffer 
-app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
-// parse an HTML body into a string 
-app.use(bodyParser.text({ type: 'text/html' }));
 
 /*=============================HANDLEBARS=======================================*/
 //setup handlebars
