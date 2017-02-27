@@ -1,7 +1,12 @@
-/*===========================GLOBAL VARIABLES==================================*/
+/*===========================DEPENDENCIES==================================*/
 const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
+const mongoose = require("mongoose");
+// Requiring the Note and News models
+const Note = require("./models/noteModel.js");
+const News = require("./models/newsmodel.js");
+
 
 const bodyParser = require('body-parser');
 

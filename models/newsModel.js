@@ -1,21 +1,29 @@
-/*==========MONGOOSE=========================*/
+/*===============NEWS MODEL=========================*/
+//require mongoose
 const mongoose = require('mongoose');
+// Create Schema class
 const Schema = mongoose.Schema;
 
-
+// Connect to mongoose using localhost db
 mongoose.connect('mongodb://localhost/nytdb');
 
-//create a schema
-var newsSchema = Schema({
-	headline: String,
-	summary: String,
-	link: String,
+//create schema for news
+var NewsSchema = Schema({
+	headline: {type: String, required: true},
+	summary: {type: String, required: true},
+	link: {type: String, required: true},
 	img: String,
-	notes: Array
+	notes: {
+	    type: Schema.Types.ObjectId,
+        ref: "Note"
+    }
 });
 
-//export the model
-module.exports = mongoose.model('News', newsSchema);
+// Create the News model with the newsSchema
+module.exports = mongoose.model('News', NewsSchema);
+
+// Export the News model
+module.exports = News;
 
 
 
