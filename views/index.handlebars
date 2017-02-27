@@ -9,7 +9,10 @@
 	<div class="panel panel-primary">
         {{#each news}}
             <div class="panel-heading"><a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a></div>
-  		    <div class="panel-body">{{this.summary}} <a href="/save/{{this._id}}"><button>Save</button></a></div>
+  		    <div class="panel-body">
+                {{this.summary}}
+                <a href="/save/{{this._id}}"><button>Save</button></a>
+            </div>
 
 
         {{/each}}

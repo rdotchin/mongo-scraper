@@ -11,7 +11,12 @@
             <!--if the article is saved it will show below-->
             {{#if saved}}
             <div class="panel-heading"><a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a></div>
-            <div class="panel-body">{{this.summary}}</div>
+            <div class="panel-body">
+                {{this.summary}}
+                {{this.notes.body}}
+                <a href="/note/{{this._id}}"><button>Add Notes</button></a>
+                <a href="/delete/{{this._id}}"><button>Delete</button></a>
+            </div>
 
             {{/if}}
 

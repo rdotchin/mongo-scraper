@@ -42,6 +42,7 @@ module.exports= function(app){
         });
 	});
 
+	// Set the new article saved to true
 	app.get('/save/:id?', function(req, res){
 	    // Set the _id of the article the user would like to save to a variable
 	    var id = req.params.id;
@@ -56,11 +57,24 @@ module.exports= function(app){
             })
 
         })
-
-	    // Select that article and update saved to true so it will show in the saved page
-
     });
 
+	// Delete News article from teh saved articles page
+	app.get('/delete/:id?', function(req, res){
+	    // set the _id of the article the user would like to delete from saved to a variable
+	    var id = req.params.id;
+
+        // Find the news article by id
+        News.findById(id, function(err, news){
+            //set saved to 0(false)
+            news.saved = 0;
+            // Save the updated save
+            news.save(function(err, updatedNews){
+                if (err) return handleError(err);
+                res.redirect('/saved');
+            })
+        })
+    })
 	app.get('/scrape', function(req, res){
         //make a request to the NYT site to grab articles
         request('https://www.nytimes.com/section/world/americas', function(err, response, html){
