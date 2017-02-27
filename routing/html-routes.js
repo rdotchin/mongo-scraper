@@ -74,7 +74,39 @@ module.exports= function(app){
                 res.redirect('/saved');
             })
         })
-    })
+    });
+	
+	app.get('/note/:id', function(req, res){
+	    //Query to find the matching id to the passed in it
+	    News.findOne({ "_id": req.params.id})
+        //Populate all of the notes associated with it
+        .populate("note")
+        //execute the query
+            .exec(function(error, doc){
+                if(error) return handleError(err);
+                res.json(doc)
+            });
+    });
+
+    app.post('/addnote/:id', function(req, res){
+        var newNote = new Note(req.body);
+
+        //save newNote to teh db
+        newNote.save(function(err, doc){
+            if(error) return handleError(err);
+            else{
+                News.findOneAndUpdate({"_id": req.params.id }, { "note": doc._id})
+                // Execute the above query
+                    .exec(function(err, doc){
+                        if(error) return handleError(err);
+                        else{
+                            res.redirect('/saved')
+                        }
+                    })
+
+            }
+        })
+    });
 	app.get('/scrape', function(req, res){
         //make a request to the NYT site to grab articles
         request('https://www.nytimes.com/section/world/americas', function(err, response, html){
@@ -90,13 +122,9 @@ module.exports= function(app){
                 // Save the text summary for the story
                 const summary = $(this).find("p").text();
 
-                console.log(headline);
-                console.log(link);
-                console.log(summary);
-
                 //create an object of every headline, link and summary
                 const result = {};
-
+                //Add content to result object
                 result.headline = headline;
                 result.link = link;
                 result.summary = summary;

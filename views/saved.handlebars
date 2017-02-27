@@ -10,21 +10,45 @@
         {{#each news}}
             <!--if the article is saved it will show below-->
             {{#if saved}}
-            <div class="panel-heading"><a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a></div>
+            <div class="panel-heading">
+                <a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a>
+                <a href="/delete/{{this._id}}"><button type="button" class="btn btn-danger saved-buttons">Delete</button></a>
+                <button type="button"  id="rickButt" class="btn btn-info saved-buttons" data-toggle="modal" data-value="{{this._id}}" data-target="#noteModal">Add Notes</button>
+            </div>
+
+
+
             <div class="panel-body">
                 {{this.summary}}
                 {{this.notes.body}}
-                <a href="/note/{{this._id}}"><button>Add Notes</button></a>
-                <a href="/delete/{{this._id}}"><button>Delete</button></a>
             </div>
 
             {{/if}}
 
         {{/each}}
 
-
+        <!-- Modal -->
+        <div id="noteModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="noteModalLabel">Note for: {{this.link}}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleTextarea">Enter New Note</label>
+                            <textarea class="form-control" id="notestext" rows="3"></textarea>
+                        </div>
+                        <div><!--enter saved notes here--></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="saveButton" class="btn btn-primary savenote">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>{{!-- /container div --}}
-
 
 </div>{{!-- /container div --}}

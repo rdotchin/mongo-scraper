@@ -11,9 +11,18 @@
 }
 
 .title {
+	font-size: 25px;
 	color: white;
 }
 
 .title:hover{
 	color: red;
+}
+
+.saved-buttons{
+	float: right;
+	margin-right: 10px;
+}
+#saveButton{
+	float: right;
 }

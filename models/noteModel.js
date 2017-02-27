@@ -6,10 +6,6 @@ const Schema = mongoose.Schema;
 
 // Create a Schema for notes
 var NotesSchema = new Schema({
-    // Title of the users note
-    title: {
-        type: String
-    },
     // Content of the users note
     body: {
         type: String
