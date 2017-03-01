@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const request = require('request');
 const Note = require("./../models/noteModel.js");
 const News = require("./../models/newsmodel.js");
+const scraper = require('./../controllers/controller.js')
 // Database configuration with mongoose
 mongoose.connect('mongodb://localhost/nytdb');
 const db = mongoose.connection;
@@ -18,40 +19,53 @@ db.once("open", function() {
 });
 
 /*===============================ROUTES======================================*/
-module.exports= function(app){
-	app.get('/', function(req, res){
-	    News.find({}, function(error, doc) {
-	        if(error){console.log(error);}
-	        else{
-	            //set up data to show in handlebars
+module.exports= function(app) {
+    app.get('/', function (req, res) {
+        News.find({}, function (error, doc) {
+            if (error) {
+                console.log(error);
+            }
+            else {
+                //set up data to show in handlebars
                 const hbsObject = {news: doc};
                 res.render('index', hbsObject);
             }
         });
-	});
+    });
 
-	// Bring user to the saved html page showing all their saved articles
-	app.get('/saved', function(req, res){
-        News.find({}, function(error, doc) {
-            if(error){console.log(error);}
-            else{
+    app.get('/scrape', function (req, res) {
+        //make a request to the NYT site to grab articles
+        request('https://www.nytimes.com/section/world/americas', function (err, response, html) {
+            scraper.scrape(function(){
+                res.redirect('/');
+            });
+
+        });
+    });
+    // Bring user to the saved html page showing all their saved articles
+    app.get('/saved', function (req, res) {
+        News.find({}, function (error, doc) {
+            if (error) {
+                console.log(error);
+            }
+            else {
                 //set up data to show in handlebars
                 const hbsObject = {news: doc};
                 res.render('saved', hbsObject);
             }
         });
-	});
+    });
 
-	// Set the new article saved to true
-	app.get('/save/:id?', function(req, res){
-	    // Set the _id of the article the user would like to save to a variable
-	    var id = req.params.id;
-	    // Find the news article by id
-        News.findById(id, function(err, news){
+    // Set the new article saved to true
+    app.get('/save/:id?', function (req, res) {
+        // Set the _id of the article the user would like to save to a variable
+        var id = req.params.id;
+        // Find the news article by id
+        News.findById(id, function (err, news) {
             if (err) return handleError(err);
 
             news.saved = 1;
-            news.save(function(err, updatedNews){
+            news.save(function (err, updatedNews) {
                 if (err) return handleError(err);
                 res.redirect('/');
             })
@@ -59,92 +73,67 @@ module.exports= function(app){
         })
     });
 
-	// Delete News article from teh saved articles page
-	app.get('/delete/:id?', function(req, res){
-	    // set the _id of the article the user would like to delete from saved to a variable
-	    var id = req.params.id;
+    // Delete News article from teh saved articles page
+    app.get('/delete/:id?', function (req, res) {
+        // set the _id of the article the user would like to delete from saved to a variable
+        var id = req.params.id;
 
         // Find the news article by id
-        News.findById(id, function(err, news){
+        News.findById(id, function (err, news) {
             //set saved to 0(false)
             news.saved = 0;
             // Save the updated save
-            news.save(function(err, updatedNews){
+            news.save(function (err, updatedNews) {
                 if (err) return handleError(err);
                 res.redirect('/saved');
             })
         })
     });
-	
-	app.get('/note/:id', function(req, res){
-	    //Query to find the matching id to the passed in it
-	    News.findOne({ "_id": req.params.id})
+
+    app.get('/notes/:id', function (req, res) {
+        //Query to find the matching id to the passed in it
+        News.findOne({_id: req.params.id})
         //Populate all of the notes associated with it
-        .populate("note")
-        //execute the query
-            .exec(function(error, doc){
-                if(error) return handleError(err);
-                res.json(doc)
+            .populate("notes")
+            //execute the query
+            .exec(function (error, doc) {
+                // Log any errors
+                if (error) {
+                    console.log(error);
+                }
+                // Otherwise, send the doc to the browser as a json object
+                else {
+                    console.log(doc);
+                    res.json(doc);
+                }
             });
     });
 
-    app.post('/addnote/:id', function(req, res){
+    app.post('/notes/:id', function (req, res) {
         var newNote = new Note(req.body);
 
         //save newNote to teh db
-        newNote.save(function(err, doc){
-            if(error) return handleError(err);
-            else{
-                News.findOneAndUpdate({"_id": req.params.id }, { "note": doc._id})
+        newNote.save(function (err, doc) {
+            // Log any errors
+            if (error) {
+                console.log(error);
+            }
+            else {
+                News.findOneAndUpdate({"_id": req.params.id}, {"note": doc._id})
                 // Execute the above query
-                    .exec(function(err, doc){
-                        if(error) return handleError(err);
-                        else{
-                            res.redirect('/saved')
+                    .exec(function (err, doc) {
+                        // Log any errors
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            // Or send the document to the browser
+                            res.send(doc);
                         }
                     })
 
             }
         })
     });
-	app.get('/scrape', function(req, res){
-        //make a request to the NYT site to grab articles
-        request('https://www.nytimes.com/section/world/americas', function(err, response, html){
-            //Load the html body from request into cheerio
-            const $ = cheerio.load(html);
 
-            //For each element with a "story" class
-            $('.story-body').each(function(i, element){
-                // Save the text of the title
-                const headline = $(this).find("h2").text();
-                // Save the link for the story
-                const link = $(this).children("a").attr("href");
-                // Save the text summary for the story
-                const summary = $(this).find("p").text();
-
-                //create an object of every headline, link and summary
-                const result = {};
-                //Add content to result object
-                result.headline = headline;
-                result.link = link;
-                result.summary = summary;
-                //create a new entry that passes the result object to the entry
-                const entry = new News(result);
-
-                // Save entry to the db
-                entry.save(function(err, doc){
-                    // Console.log any errors
-                    if(err){console.log(err);}
-                    // Or log the doc
-                    else{console.log(doc);}
-
-                })
-
-            })
-
-        });
-
-		res.redirect('/');
-	});
-
-};
+}

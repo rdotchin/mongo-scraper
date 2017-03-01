@@ -12,10 +12,10 @@ var NewsSchema = Schema({
 	link: {type: String, required: true},
 	img: String,
 	saved: {type: Boolean, default: 0},
-	notes: {
+	notes: [{
 	    type: Schema.Types.ObjectId,
         ref: "Note"
-    }
+    }]
 });
 
 // Create the News model with the newsSchema

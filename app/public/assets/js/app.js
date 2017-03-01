@@ -7,10 +7,7 @@ $(document).ready(function(){
         $("#saveButton").attr({"data-value": thisId});
 
         //make an ajax call for the notes attached to this article
-        $.ajax({
-            method: "GET",
-            url: "/notes/" + thisId
-        }).done(function(data){
+        $.get("/notes/" + thisId, function(data){
             console.log(data);
             //body of the notes
 
@@ -25,7 +22,7 @@ $(document).ready(function(){
 
         $.ajax({
             method: "POST",
-            url: "/addnote/" + thisId,
+            url: "/notes/" + thisId,
             data: {
                 //id of the news article
                 _id: thisId,
