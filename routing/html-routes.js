@@ -1,6 +1,4 @@
-const cheerio = require('cheerio');
 const mongoose = require("mongoose");
-const request = require('request');
 const Note = require("./../models/noteModel.js");
 const News = require("./../models/newsmodel.js");
 const scraper = require('./../controllers/controller.js')
@@ -21,6 +19,7 @@ db.once("open", function() {
 /*===============================ROUTES======================================*/
 module.exports= function(app) {
     app.get('/', function (req, res) {
+        //find all the news articles in the mongoDB
         News.find({}, function (error, doc) {
             if (error) {
                 console.log(error);
@@ -28,34 +27,20 @@ module.exports= function(app) {
             else {
                 //set up data to show in handlebars
                 const hbsObject = {news: doc};
+                //render the index.handlebars file with dbsObject
                 res.render('index', hbsObject);
             }
         });
     });
 
     app.get('/scrape', function (req, res) {
-        //make a request to the NYT site to grab articles
-        request('https://www.nytimes.com/section/world/americas', function (err, response, html) {
+            //call the scrape function from controller.js to initiate the scrape
             scraper.scrape(function(){
+                /*cb from scrape function and redirect back to the homepage to display
+                the scraped data*/
                 res.redirect('/');
             });
-
-        });
     });
-    // Bring user to the saved html page showing all their saved articles
-    app.get('/saved', function (req, res) {
-        News.find({}, function (error, doc) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                //set up data to show in handlebars
-                const hbsObject = {news: doc};
-                res.render('saved', hbsObject);
-            }
-        });
-    });
-
     // Set the new article saved to true
     app.get('/save/:id?', function (req, res) {
         // Set the _id of the article the user would like to save to a variable
@@ -73,18 +58,31 @@ module.exports= function(app) {
         })
     });
 
+    // Bring user to the saved html page showing all their saved articles
+    app.get('/saved', function (req, res) {
+        News.find({}, function (error, doc) {
+            if (error) {
+                console.log(error);
+            }
+            else {
+                //set up data to show in handlebars
+                const hbsObject = {news: doc};
+                res.render('saved', hbsObject);
+            }
+        });
+    });
     // Delete News article from teh saved articles page
     app.get('/delete/:id?', function (req, res) {
         // set the _id of the article the user would like to delete from saved to a variable
         var id = req.params.id;
-
         // Find the news article by id
         News.findById(id, function (err, news) {
-            //set saved to 0(false)
+            //set saved to 0(false) so it will be removed from the saved page
             news.saved = 0;
-            // Save the updated save
+            // save the updated changes to the article
             news.save(function (err, updatedNews) {
                 if (err) return handleError(err);
+                //redirect back to the saved page
                 res.redirect('/saved');
             })
         })
