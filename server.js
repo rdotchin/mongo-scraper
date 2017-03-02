@@ -6,7 +6,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 // Requiring the Note and News models
 const bodyParser = require('body-parser');
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Morgan and body-parser
 app.use(logger("dev"));
