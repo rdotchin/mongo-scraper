@@ -3,8 +3,12 @@ const Note = require("./../models/noteModel.js"); //require the Note model
 const News = require("./../models/newsmodel.js"); //require the News model
 const scraper = require('./../controllers/controller.js'); //require the scrape function
 
+// Require bluebird as promise because mongoose promises are deprecated
+var Promise = require('bluebird');
+mongoose.Promise = Promise;
+
 // Database configuration with mongoose
-mongoose.connect('mongodb://localhost/nytdb');
+mongoose.connect('mongodb://localhost/nytdb' || );
 const db = mongoose.connection;
 
 // Show any mongoose errors
