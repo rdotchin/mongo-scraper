@@ -8,11 +8,13 @@
 
     <div class="panel panel-primary">
         {{#each news}}
-            <!--if the article is saved it will show below-->
+            <!--if there are saved articles it will show below-->
             {{#if saved}}
             <div class="panel-heading">
                 <a target="_blank" href="{{this.link}}" class="title">{{this.headline}}</a>
+                <!--DELETE button-->
                 <a href="/delete/{{this._id}}"><button type="button" class="btn btn-danger saved-buttons">Delete</button></a>
+                <!--ADD NOTES button with a data-value of the news articles id-->
                 <button type="button"  id="rickButt" class="btn btn-info saved-buttons" data-toggle="modal" data-value="{{this._id}}" data-target="#noteModal">Add Notes</button>
             </div>
 
@@ -32,11 +34,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="noteModalLabel">Note for: {{this.link}}</h5>
+                        <!--title including the id of the current article-->
+                        <h5 class="modal-title" id="noteModalLabel">Note for: </h5>
+                        <!--where notes will be displayed-->
+                        <div id="notesBody"></div>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="exampleTextarea">Enter New Note</label>
+                            <!--enter note text-->
                             <textarea class="form-control" id="notestext" rows="3"></textarea>
                         </div>
                         <div><!--enter saved notes here--></div>

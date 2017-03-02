@@ -109,29 +109,24 @@ module.exports= function(app) {
 
     app.post('/notes/:id', function (req, res) {
         var newNote = new Note(req.body);
-
+        console.log(req.body);
         //save newNote to teh db
         newNote.save(function (err, doc) {
             // Log any errors
-            if (error) {
-                console.log(error);
-            }
-            else {
-                News.findOneAndUpdate({"_id": req.params.id}, {"note": doc._id})
-                // Execute the above query
-                    .exec(function (err, doc) {
-                        // Log any errors
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            // Or send the document to the browser
-                            res.send(doc);
-                        }
-                    })
-
-            }
-        })
+            console.log('DOC ID');
+            console.log(doc.id);
+            /*if (error) console.log(error);*/
+            News.findOneAndUpdate(
+                {_id: req.params.id},
+                {$push: {notes: doc.id}},
+                {new: true},
+                function(err, newdoc){
+                if(err) console.log(err);
+                console.log(newdoc);
+                res.send(newdoc);
+            });
+        });
     });
 
-}
+
+};

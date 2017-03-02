@@ -1,4 +1,3 @@
-/*===============NEWS MODEL=========================*/
 //require mongoose
 const mongoose = require('mongoose');
 // Create Schema class
