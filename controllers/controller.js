@@ -1,7 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const Note = require("./../models/noteModel.js");
-const News = require("./../models/newsmodel.js");
+const News = require("./../models/newsModel.js");
 module.exports = {
 
     scrape: function (cb) {
