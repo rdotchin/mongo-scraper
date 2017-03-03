@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Note = require("./../models/noteModel.js"); //require the Note model
-const News = require("./../models/newsmodel.js"); //require the News model
+const News = require("./../models/newsModel.js"); //require the News model
 const scraper = require('./../controllers/controller.js'); //require the scrape function
 
 // Require bluebird as promise because mongoose promises are deprecated
