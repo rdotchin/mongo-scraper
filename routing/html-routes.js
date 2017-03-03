@@ -8,7 +8,7 @@ var Promise = require('bluebird');
 mongoose.Promise = Promise;
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/nytdb");
+mongoose.connect("mongodb://heroku_qcjzw3fs:8pqpq9khv67tb3ilq128eppdb3@ds113670.mlab.com:13670/heroku_qcjzw3fs");
 const db = mongoose.connection;
 
 // Show any mongoose errors

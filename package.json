@@ -16,9 +16,6 @@
   "bugs": {
     "url": "https://github.com/rdotchin/mongo-scraper/issues"
   },
-  "engines": {
-    "node": "4.1.1"
-  },
   "homepage": "https://github.com/rdotchin/mongo-scraper#readme",
   "dependencies": {
     "bluebird": "^3.4.7",
