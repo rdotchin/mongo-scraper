@@ -8,7 +8,7 @@ var Promise = require('bluebird');
 mongoose.Promise = Promise;
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://heroku_zzvw36x7:6optlkkvpc1ntfr8ovdcqm3e3v@ds023932.mlab.com:23932/heroku_zzvw36x7");
+mongoose.connect("mongodb://localhost/nytdb");
 const db = mongoose.connection;
 
 // Show any mongoose errors
@@ -27,16 +27,13 @@ module.exports= function(app) {
     /*HOME PAGE*/
     app.get('/', function (req, res) {
         //find all the news articles in the mongoDB
-        News.find({}, function (error, doc) {
-            if (error) {
-                console.log(error);
-            }
-            else {
+        News.find({}, function (err, doc) {
+            if (err) return handleError(err);
                 //set up data to show in handlebars
                 const hbsObject = {news: doc};
                 //render the index.handlebars file with dbsObject
                 res.render('index', hbsObject);
-            }
+
         });
     });
 
@@ -70,15 +67,12 @@ module.exports= function(app) {
 
     // Bring user to the saved html page showing all their saved articles
     app.get('/saved', function (req, res) {
-        News.find({}, function (error, doc) {
-            if (error) {
-                console.log(error);
-            }
-            else {
+        //find all news articles
+        News.find({}, function (err, doc) {
+            if (err) return handleError (err);
                 //set up data to show in handlebars
                 const hbsObject = {news: doc};
                 res.render('saved', hbsObject);
-            }
         });
     });
     // Delete News article from teh saved articles page
@@ -105,31 +99,36 @@ module.exports= function(app) {
                 if (error) console.log(error);
                 // Otherwise, send the doc to the browser as a json object
                 else {
-                    console.log(doc);
                     res.json(doc);
                 }
             });
     });
 
+    // Add a note to a saved article
     app.post('/notes/:id', function (req, res) {
         //create a new note with req.body
         var newNote = new Note(req.body);
         //save newNote to the db
         newNote.save(function (err, doc) {
             // Log any errors
-            console.log('DOC ID');
-            console.log(doc.id);
-            /*if (error) console.log(error);*/
+            if (err) console.log(err);
             //find and update the note
             News.findOneAndUpdate(
                 {_id: req.params.id}, // find the _id by req.params.id
-                {$push: {notes: doc.id}}, //push to the notes array
+                {$push: {notes: doc._id}}, //push to the notes array
                 {new: true},
                 function(err, newdoc){
-                if(err) console.log(err);
-                console.log(newdoc);
-                res.send(newdoc);
+                    if (err) return handleError(err);
+                    res.send(newdoc);
             });
+        });
+    });
+
+    //delete note, remove by the note id in the params
+    app.get('/deleteNote/:id', function(req, res){
+        Note.remove({"_id": req.params.id}, function(err, newdoc){
+            if(err) console.log(err);
+            res.redirect('/saved'); //redirect to reload the page
         });
     });
 

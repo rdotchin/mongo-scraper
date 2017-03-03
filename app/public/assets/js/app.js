@@ -9,16 +9,23 @@ $(document).ready(function(){
 
         //make an ajax call for the notes attached to this article
         $.get("/notes/" + thisId, function(data){
+            console.log(data);
             //empty modal title, textarea and notes
             $('#noteModalLabel').empty();
             $('#notesBody').empty();
             $('#notestext').val('');
 
+            //delete button for individual note
+
             //add id of the current NEWS article to modal label
             $('#noteModalLabel').append(' ' + thisId);
             //add notes to body of modal, will loop through if multiple notes
             for(var i = 0; i<data.notes.length; i++) {
-                $('#notesBody').append(data.notes[i].body);
+                var button = "<a href=/deleteNote/" + data.notes[i]._id + ">DELETE</a>";
+                $('#notesBody').append("<br>*" + data.notes[i].body);
+                $('#notesBody').append(button);
+
+
             }
         });
     });
@@ -33,8 +40,6 @@ $(document).ready(function(){
             method: "POST",
             url: "/notes/" + thisId,
             data: {
-                //id of the news article
-                _id: thisId,
                 //note created by the user
                 body: $("#notestext").val().trim()
             }
@@ -44,3 +49,4 @@ $(document).ready(function(){
         });
     });
 });
+
