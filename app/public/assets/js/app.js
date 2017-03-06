@@ -21,7 +21,7 @@ $(document).ready(function(){
             $('#noteModalLabel').append(' ' + thisId);
             //add notes to body of modal, will loop through if multiple notes
             for(var i = 0; i<data.notes.length; i++) {
-                var button = "<a href=/deleteNote/" + data.notes[i]._id + ">DELETE</a>";
+                var button = ' <a href=/deleteNote/' + data.notes[i]._id + '><button type="button" class="btn btn-danger">Delete</button></a>';
                 $('#notesBody').append("<br>*" + data.notes[i].body);
                 $('#notesBody').append(button);
 
