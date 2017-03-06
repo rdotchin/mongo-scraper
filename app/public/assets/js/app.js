@@ -22,10 +22,7 @@ $(document).ready(function(){
             //add notes to body of modal, will loop through if multiple notes
             for(var i = 0; i<data.notes.length; i++) {
                 var button = ' <a href=/deleteNote/' + data.notes[i]._id + '><button type="button" class="btn btn-danger">Delete</button></a>';
-                $('#notesBody').append("<br>*" + data.notes[i].body);
-                $('#notesBody').append(button);
-
-
+                $('#notesBody').append('<li>' + data.notes[i].body + '  ' + button + '</li>');
             }
         });
     });
