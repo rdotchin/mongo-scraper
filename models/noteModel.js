@@ -6,10 +6,10 @@ const Schema = mongoose.Schema;
 
 // Create a Schema for notes
 var NotesSchema = new Schema({
-    // Content of the users note
-    body: {
-        type: String
-    }
+      // Content of the users note
+      body: {
+            type: String
+      }
 });
 
 // Reminder: Mongoose automatically saves the ObjectIDs of the notes
