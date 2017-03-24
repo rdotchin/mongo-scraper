@@ -1,31 +1,31 @@
 {
-  "name": "mongo-scraper",
-  "version": "1.0.0",
-  "description": "scrape NYT articles to mongoDB",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rdotchin/mongo-scraper.git"
-  },
-  "author": "Richard Dotchin",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rdotchin/mongo-scraper/issues"
-  },
-  "homepage": "https://github.com/rdotchin/mongo-scraper#readme",
-  "dependencies": {
-    "bluebird": "^3.4.7",
-    "body-parser": "^1.16.1",
-    "cheerio": "^0.22.0",
-    "express": "^4.14.1",
-    "express-handlebars": "^3.0.0",
-    "mongojs": "^2.4.0",
-    "mongoose": "^4.8.4",
-    "morgan": "^1.8.1",
-    "request": "^2.79.0"
-  }
+      "name": "mongo-scraper",
+      "version": "1.0.0",
+      "description": "scrape NYT articles to mongoDB",
+      "main": "server.js",
+      "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1",
+            "start": "node server.js"
+      },
+      "repository": {
+            "type": "git",
+            "url": "git+https://github.com/rdotchin/mongo-scraper.git"
+      },
+      "author": "Richard Dotchin",
+      "license": "ISC",
+      "bugs": {
+            "url": "https://github.com/rdotchin/mongo-scraper/issues"
+      },
+      "homepage": "https://github.com/rdotchin/mongo-scraper#readme",
+      "dependencies": {
+            "bluebird": "^3.4.7",
+            "body-parser": "^1.16.1",
+            "cheerio": "^0.22.0",
+            "express": "^4.14.1",
+            "express-handlebars": "^3.0.0",
+            "mongojs": "^2.4.0",
+            "mongoose": "^4.8.4",
+            "morgan": "^1.8.1",
+            "request": "^2.79.0"
+      }
 }
